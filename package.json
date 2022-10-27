@@ -1,8 +1,9 @@
 {
   "engines": {
-    "node": "14",
-    "yarn": "2"
+    "node": ">=16",
+    "yarn": "3"
   },
+  "packageManager": "yarn@3.2.1",
   "name": "@react-day-picker/monorepo",
   "private": true,
   "description": "Monorepo of react-day-picker",
@@ -10,8 +11,10 @@
   "homepage": "http://react-day-picker.js.org",
   "license": "MIT",
   "scripts": {
-    "test": "yarn workspace react-day-picker run test",
-    "build": "yarn workspace react-day-picker run build && yarn workspace website run build"
+    "build-all": "yarn workspaces foreach run build",
+    "lint-all": "yarn workspaces foreach -pt run lint",
+    "test-all": "yarn workspaces foreach run test",
+    "typecheck": "yarn workspaces foreach run typecheck"
   },
   "repository": {
     "type": "git",
@@ -22,7 +25,9 @@
   },
   "workspaces": [
     "website",
-    "playground",
     "packages/*"
-  ]
+  ],
+  "resolutions": {
+    "trim": "0.0.3"
+  }
 }

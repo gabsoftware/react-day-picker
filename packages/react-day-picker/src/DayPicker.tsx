@@ -1,9 +1,18 @@
-import * as React from 'react';
+import React from 'react';
 
-import { DayPickerProps } from 'types';
+import { DayPickerDefaultProps } from 'types/DayPickerDefault';
+import { DayPickerMultipleProps } from 'types/DayPickerMultiple';
+import { DayPickerRangeProps } from 'types/DayPickerRange';
+import { DayPickerSingleProps } from 'types/DayPickerSingle';
 
-import { Root } from 'components/Root';
-import { ContextProvider } from 'contexts/ContextProvider';
+import { Root } from './components/Root';
+import { RootProvider } from './contexts/RootProvider';
+
+export type DayPickerProps =
+  | DayPickerDefaultProps
+  | DayPickerSingleProps
+  | DayPickerMultipleProps
+  | DayPickerRangeProps;
 
 /**
  * DayPicker render a date picker component to let users pick dates from a
@@ -41,9 +50,11 @@ import { ContextProvider } from 'contexts/ContextProvider';
  *   days that can be selected with the `min` or the `max` props.
  * - `mode="range"`: users can select a range of days. Limit the amount of days
  *   in the range with the `min` or the `max` props.
+ * - `mode="default"` (default): the built-in selections are disabled. Implement
+ *   your own selection mode with `onDayClick`.
  *
- * These selection modes should cover the most common use cases. In case you
- * need a more refined way of selecting days, use `mode="uncontrolled"`. Use the
+ * The selection modes should cover the most common use cases. In case you
+ * need a more refined way of selecting days, use `mode="default"`. Use the
  * `selected` props and add the day event handlers to add/remove days from the
  * selection.
  *
@@ -64,8 +75,8 @@ import { ContextProvider } from 'contexts/ContextProvider';
  *
  * ### Styling
  *
- * DayPicker comes with a default, basic style in `react-day-picker/style` –
- * use it as template for your own style.
+ * DayPicker comes with a default, basic style in `react-day-picker/style` – use
+ * it as template for your own style.
  *
  * If you are using CSS modules, pass the imported styles object the
  * `classNames` props.
@@ -90,10 +101,16 @@ import { ContextProvider } from 'contexts/ContextProvider';
  * <DayPicker locale={es} />
  * ```
  */
-export function DayPicker(props: DayPickerProps): JSX.Element {
+export function DayPicker(
+  props:
+    | DayPickerDefaultProps
+    | DayPickerSingleProps
+    | DayPickerMultipleProps
+    | DayPickerRangeProps
+): JSX.Element {
   return (
-    <ContextProvider {...props}>
+    <RootProvider {...props}>
       <Root />
-    </ContextProvider>
+    </RootProvider>
   );
 }

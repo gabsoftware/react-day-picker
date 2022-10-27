@@ -1,44 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "module": "ES2015",
-    "esModuleInterop": true,
+    "target": "es5",
     "jsx": "react",
-    "sourceMap": true,
-    "removeComments": false,
-    "declaration": true,
+    "module": "es6",
+    "moduleResolution": "node",
+    "rootDir": "./",
     "baseUrl": "./src",
     "noEmit": true,
     "paths": {
-      "components": ["./components"],
-      "contexts": ["./contexts"],
-      "hooks": ["./hooks"],
-      "types": ["./types"],
-      "test": ["./test"]
+      "test/*": ["../test/*"]
     },
-
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-
-    "outDir": "esm",
-    "declarationDir": "esm",
-
-    "lib": ["es5", "es6", "es7", "es2017", "dom"],
-
-    "allowJs": false,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "importHelpers": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-
     "strict": true,
-
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "suppressImplicitAnyIndexErrors": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*", "types/**/*", "test/**/*"],
-  "exclude": ["../../node_modules/**/*"]
+  "include": ["test", "src"]
 }

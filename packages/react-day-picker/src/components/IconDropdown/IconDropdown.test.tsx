@@ -1,20 +1,20 @@
-import * as React from 'react';
+import React from 'react';
 
-import { customRender, PageObjects } from 'test';
+import { customRender } from 'test/render';
 
 import { IconDropdown } from './IconDropdown';
 
-const po = new PageObjects(new Date());
+let root: HTMLElement;
 
 beforeEach(() => {
-  customRender(<IconDropdown className="foo" style={{ color: 'red' }} />);
-});
-test('should render the icon', () => {
-  expect(po.iconDropdown).toBeInTheDocument();
+  const view = customRender(
+    <IconDropdown className="foo" style={{ color: 'red' }} />
+  );
+  root = view.container.firstChild as HTMLElement;
 });
 test('should add the class name', () => {
-  expect(po.iconDropdown).toHaveClass('foo');
+  expect(root).toHaveClass('foo');
 });
 test('should apply the style', () => {
-  expect(po.iconDropdown).toHaveStyle({ color: 'red' });
+  expect(root).toHaveStyle({ color: 'red' });
 });

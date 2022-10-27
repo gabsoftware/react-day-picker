@@ -1,8 +1,7 @@
-import * as React from 'react';
-
-import { isSameMonth } from 'date-fns';
+import startOfMonth from 'date-fns/startOfMonth';
 
 import { useDayPicker } from 'contexts/DayPicker';
+import { useControlledValue } from 'hooks/useControlledValue';
 
 import { getInitialMonth } from './utils/getInitialMonth';
 
@@ -15,20 +14,14 @@ export function useNavigationState(): [
 ] {
   const context = useDayPicker();
   const initialMonth = getInitialMonth(context);
-  const [month, setMonth] = React.useState<Date>(initialMonth);
+  const [month, setMonth] = useControlledValue(initialMonth, context.month);
 
   const goToMonth = (date: Date) => {
     if (context.disableNavigation) return;
-    setMonth(date);
+    const month = startOfMonth(date);
+    setMonth(month);
+    context.onMonthChange?.(month);
   };
-
-  // Update month if updated from context.
-  React.useEffect(() => {
-    // TODO: return void also if `context.defaultMonth`?
-    if (!context.month) return;
-    if (isSameMonth(context.month, month)) return;
-    setMonth(context.month);
-  }, [context.month]);
 
   return [month, goToMonth];
 }

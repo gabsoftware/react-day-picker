@@ -1,17 +1,22 @@
-import * as React from 'react';
+import React from 'react';
 
-import { isSameYear, setMonth as setDateMonth, startOfMonth } from 'date-fns';
+import isSameYear from 'date-fns/isSameYear';
+import setMonth from 'date-fns/setMonth';
+import startOfMonth from 'date-fns/startOfMonth';
 
+import { Dropdown } from 'components/Dropdown';
 import { useDayPicker } from 'contexts/DayPicker';
+import { MonthChangeEventHandler } from 'types/EventHandlers';
 
-import { MonthsDropdownProps } from './MonthsDropdownProps';
+/** The props for the {@link MonthsDropdown} component. */
+export interface MonthsDropdownProps {
+  /** The month where the dropdown is displayed. */
+  displayMonth: Date;
+  onChange: MonthChangeEventHandler;
+}
 
-/**
- * Render the dropdown to navigate between months.
- */
+/** Render the dropdown to navigate between months. */
 export function MonthsDropdown(props: MonthsDropdownProps): JSX.Element {
-  const { displayMonth } = props;
-
   const {
     fromDate,
     toDate,
@@ -19,57 +24,53 @@ export function MonthsDropdown(props: MonthsDropdownProps): JSX.Element {
     locale,
     formatters: { formatMonthCaption },
     classNames,
-    components: { Dropdown },
+    components,
     labels: { labelMonthDropdown }
   } = useDayPicker();
 
-  if (!fromDate && !toDate) {
-    // TODO: use type guards
-    return <></>;
-  }
+  // Dropdown should appear only when both from/toDate is set
+  if (!fromDate) return <></>;
+  if (!toDate) return <></>;
+
   const dropdownMonths: Date[] = [];
 
-  if (fromDate && toDate) {
-    if (isSameYear(fromDate, toDate)) {
-      // only display the months included in the range
-      for (
-        let month = fromDate.getMonth();
-        month <= toDate.getMonth();
-        month++
-      ) {
-        dropdownMonths.push(setDateMonth(startOfMonth(fromDate), month));
-      }
-    } else {
-      // display all the 12 months
-      for (let month = 0; month <= 11; month++) {
-        const anyDate = new Date(); // any date is OK, we just need the year
-        dropdownMonths.push(setDateMonth(startOfMonth(anyDate), month));
-      }
+  if (isSameYear(fromDate, toDate)) {
+    // only display the months included in the range
+    const date = startOfMonth(fromDate);
+    for (let month = fromDate.getMonth(); month <= toDate.getMonth(); month++) {
+      dropdownMonths.push(setMonth(date, month));
+    }
+  } else {
+    // display all the 12 months
+    const date = startOfMonth(new Date()); // Any date should be OK, as we just need the year
+    for (let month = 0; month <= 11; month++) {
+      dropdownMonths.push(setMonth(date, month));
     }
   }
 
   const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const newMonth = setDateMonth(
-      new Date(displayMonth),
-      Number(e.target.value)
-    );
+    const selectedMonth = Number(e.target.value);
+    const newMonth = setMonth(startOfMonth(props.displayMonth), selectedMonth);
     props.onChange(newMonth);
   };
 
+  const DropdownComponent = components?.Dropdown ?? Dropdown;
+
   return (
-    <Dropdown
+    <DropdownComponent
+      name="months"
       aria-label={labelMonthDropdown()}
       className={classNames.dropdown_month}
       style={styles.dropdown_month}
       onChange={handleChange}
-      value={displayMonth.getMonth()}
-      caption={formatMonthCaption(displayMonth, { locale })}
+      value={props.displayMonth.getMonth()}
+      caption={formatMonthCaption(props.displayMonth, { locale })}
     >
       {dropdownMonths.map((m) => (
         <option key={m.getMonth()} value={m.getMonth()}>
           {formatMonthCaption(m, { locale })}
         </option>
       ))}
-    </Dropdown>
+    </DropdownComponent>
   );
 }

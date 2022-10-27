@@ -1,0 +1,8 @@
+.shadowRoot {
+  background-color: white;
+  overflow: auto;
+}
+
+html[data-theme='dark'] .shadowRoot {
+  color: white;
+}

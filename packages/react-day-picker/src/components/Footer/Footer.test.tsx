@@ -1,30 +1,29 @@
 import React from 'react';
 
-import { customRender, PageObjects } from 'test';
+import { getTableFooter, queryTableFooter } from 'test/po';
+import { customRender } from 'test/render';
 
 import { Footer } from './Footer';
 
-const po = new PageObjects(new Date());
-
+customRender(
+  <table role="grid">
+    <Footer />
+  </table>
+);
 test('should not render anything as default', () => {
-  customRender(
-    <table>
-      <Footer />
-    </table>
-  );
-  expect(po.footer).toBeNull();
+  expect(queryTableFooter()).toBeNull();
 });
 
 describe('when using the `footer` prop', () => {
   beforeEach(() => {
     customRender(
-      <table>
+      <table role="grid">
         <Footer />
       </table>,
       { footer: 'footer_foo' }
     );
   });
   test('should render the table footer', () => {
-    expect(po.footer).toHaveTextContent('footer_foo');
+    expect(getTableFooter()).toHaveTextContent('footer_foo');
   });
 });

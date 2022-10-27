@@ -1,21 +1,21 @@
-import * as React from 'react';
+import React from 'react';
 
+import { Footer } from 'components/Footer';
 import { Head } from 'components/Head';
+import { Row } from 'components/Row';
 import { useDayPicker } from 'contexts/DayPicker';
 
-import { getWeeks } from './utils/getWeeks';
+import { getMonthWeeks } from './utils/getMonthWeeks';
 
-/**
- * The props for the [[Table]] component.
- */
+/** The props for the {@link Table} component. */
 export interface TableProps {
+  /** The ID of the label of the table (the same given to the Caption). */
+  ['aria-labelledby']?: string;
   /** The month where the table is displayed. */
   displayMonth: Date;
 }
 
-/**
- * Render the table with the calendar.
- */
+/** Render the table with the calendar. */
 export function Table(props: TableProps): JSX.Element {
   const {
     locale,
@@ -23,23 +23,42 @@ export function Table(props: TableProps): JSX.Element {
     styles,
     hideHead,
     fixedWeeks,
-    components: { Row, Footer }
+    components,
+    weekStartsOn,
+    firstWeekContainsDate,
+    ISOWeek
   } = useDayPicker();
-  const weeks = getWeeks(props.displayMonth, { locale, fixedWeeks });
+
+  const weeks = getMonthWeeks(props.displayMonth, {
+    useFixedWeeks: Boolean(fixedWeeks),
+    ISOWeek,
+    locale,
+    weekStartsOn,
+    firstWeekContainsDate
+  });
+
+  const HeadComponent = components?.Head ?? Head;
+  const RowComponent = components?.Row ?? Row;
+  const FooterComponent = components?.Footer ?? Footer;
   return (
-    <table className={classNames.table} style={styles.table}>
-      {!hideHead && <Head />}
+    <table
+      className={classNames.table}
+      style={styles.table}
+      role="grid"
+      aria-labelledby={props['aria-labelledby']}
+    >
+      {!hideHead && <HeadComponent />}
       <tbody className={classNames.tbody} style={styles.tbody}>
-        {Object.keys(weeks).map((weekNumber) => (
-          <Row
+        {weeks.map((week) => (
+          <RowComponent
             displayMonth={props.displayMonth}
-            key={weekNumber}
-            dates={weeks[weekNumber]}
-            weekNumber={Number(weekNumber)}
+            key={week.weekNumber}
+            dates={week.dates}
+            weekNumber={week.weekNumber}
           />
         ))}
       </tbody>
-      <Footer />
+      <FooterComponent />
     </table>
   );
 }

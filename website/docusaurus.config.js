@@ -1,96 +1,97 @@
+// @ts-check
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-undef */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require('react-day-picker/package.json');
-const pkgPath = '../packages/react-day-picker';
 
-const config = {
-  title: 'React DayPicker',
-  tagline: 'Customizable date picker component for React',
-  url: 'https://react-day-picker.js.org',
-  baseUrl: '/',
-  favicon: 'images/favicon.ico',
-  organizationName: 'gpbl',
-  projectName: 'react-day-picker',
-  themeConfig: {
-    defaultMode: 'light',
-    disableSwitch: false,
-    respectPrefersColorScheme: true,
-    image: 'images/favicon.png',
-    navbar: {
-      title: 'DayPicker',
-      logo: {
-        alt: 'DayPicker Logo',
-        src: 'images/logo.png'
-      },
-      items: [
-        {
-          to: 'start',
-          label: 'Documentation',
-          activeBaseRegex: '(start|basics|guides)'
-        },
-        {
-          to: 'api/interfaces/daypickerbase',
-          label: 'Component Props'
-        },
-        {
-          to: 'api',
-          label: 'API Reference',
-          activeBaseRegex: '!(api/interfaces/daypickerprops)'
-        },
-        { to: 'changelog', label: `v${pkg.version}`, position: 'right' },
-        {
-          href: 'https://github.com/gpbl/react-day-picker',
-          label: 'GitHub',
-          position: 'right'
-        }
-      ]
-    },
-    gtag: {
-      trackingID: 'UA-68185118-1'
-    },
-    prism: {
-      theme: require('prism-react-renderer/themes/vsLight'),
-      darkTheme: require('prism-react-renderer/themes/duotoneDark')
+const typedocConfig = require('./docusaurus.typedoc');
+const lightCodeTheme = require('prism-react-renderer/themes/github');
+const darkCodeTheme = require('prism-react-renderer/themes/nightOwl');
+
+/** @type {import('@docusaurus/preset-classic').Options} */
+const presetClassicConfig = {
+  docs: {
+    sidebarPath: require.resolve('./docusaurus.sidebars.js'),
+    routeBasePath: '/',
+    breadcrumbs: false,
+    lastVersion: 'current',
+    editUrl: 'https://github.com/gpbl/react-day-picker/edit/master/website/',
+    versions: {
+      current: {
+        path: '/',
+        label: `v${pkg.version}`
+      }
     }
   },
-  presets: [
-    [
-      '@docusaurus/preset-classic',
-      {
-        docs: {
-          sidebarPath: require.resolve('./config/sidebar.ts'),
-          showLastUpdateAuthor: false,
-          showLastUpdateTime: false,
-          routeBasePath: '/'
-        },
-        // pages: false,
-        theme: {
-          customCss: require.resolve('./config/custom.css')
-        }
-      }
-    ]
-  ],
-  plugins: [
-    [
-      'docusaurus-plugin-typedoc',
-      {
-        sidebar: {
-          sidebarFile: null
-        },
-        // Typedoc settings
-        entryPoints: [`${pkgPath}/src/index.ts`],
-        tsconfig: `${pkgPath}/tsconfig.json`,
-        allReflectionsHaveOwnDocument: true,
-        readme: 'none',
-        disableSources: true,
-        watch: process.env.TYPEDOC_WATCH,
-        out: 'api',
+  gtag: { trackingID: 'UA-68185118-1' },
+  theme: { customCss: require.resolve('./src/custom.css') }
+};
 
-        // Markdown plugin settings
-        hideBreadcrumbs: true,
-        hideInPageTOC: true,
-        indexTitle: 'API Reference'
+/** @type {import('@docusaurus/types').Config} */
+const config = {
+  title: 'React DayPicker',
+  tagline: 'Date Picker Component for React',
+  url: 'https://react-day-picker.js.org',
+  baseUrl: '/',
+  favicon: 'images/favicon.png',
+  organizationName: 'gpbl',
+  projectName: 'react-day-picker',
+  trailingSlash: false,
+  clientModules: [require.resolve('react-day-picker/dist/style.css')],
+  themeConfig: {
+    announcementBar: {
+      id: '1',
+      content:
+        '👋📆 This documentation is for <b>DayPicker v8</b>. For the previous version, see <a href="https://react-day-picker-v7.netlify.app">react-day-picker-v7.netlify.app</a>.',
+      isCloseable: true
+    },
+    metadata: [
+      { name: 'twitter:site', content: '@gpblv' },
+      { name: 'twitter:title', content: 'React DayPicker' },
+      {
+        name: 'twitter:description',
+        content:
+          'DayPicker is a date picker component for React, written in TypeScript.'
+      },
+      {
+        name: 'og:description',
+        content:
+          'DayPicker is a date picker component for React, written in TypeScript.'
+      },
+      {
+        name: 'description',
+        content:
+          'DayPicker is a date picker component for React, written in TypeScript.'
+      },
+      {
+        name: 'keywords',
+        content:
+          'date picker, react component, calendar component, react datepicker, daypicker, react day picker, date-fns date picker, typescript date picker'
       }
-    ]
-  ]
+    ],
+    docs: {
+      sidebar: {
+        hideable: false
+      }
+    },
+    image: 'images/og-image.png',
+    navbar: require('./docusaurus.navbar.js'),
+    prism: { theme: lightCodeTheme, darkTheme: darkCodeTheme },
+    algolia: {
+      appId: 'N44150BS2A',
+      apiKey: '42c559dd71da40a168be6f6d81d2bbbc',
+      indexName: 'react-day-picker-js',
+      contextualSearch: true,
+      searchPagePath: 'search'
+    },
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: true
+    }
+  },
+  presets: [['@docusaurus/preset-classic', presetClassicConfig]],
+  plugins: [['docusaurus-plugin-typedoc', typedocConfig]]
 };
 
 module.exports = config;

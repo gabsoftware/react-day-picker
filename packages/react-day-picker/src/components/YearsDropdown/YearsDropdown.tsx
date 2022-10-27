@@ -1,13 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 
-import { setYear, startOfYear } from 'date-fns';
+import setYear from 'date-fns/setYear';
+import startOfMonth from 'date-fns/startOfMonth';
+import startOfYear from 'date-fns/startOfYear';
 
-import { MonthChangeEventHandler } from 'types';
-
+import { Dropdown } from 'components/Dropdown';
 import { useDayPicker } from 'contexts/DayPicker';
+import { MonthChangeEventHandler } from 'types/EventHandlers';
 
 /**
- * The props for the [[YearsDropdown]] component.
+ * The props for the {@link YearsDropdown} component.
  */
 export interface YearsDropdownProps {
   /** The month where the drop-down is displayed. */
@@ -28,30 +30,39 @@ export function YearsDropdown(props: YearsDropdownProps): JSX.Element {
     locale,
     styles,
     classNames,
-    components: { Dropdown },
+    components,
     formatters: { formatYearCaption },
     labels: { labelYearDropdown }
   } = useDayPicker();
 
   const years: Date[] = [];
-  if (fromDate && toDate) {
-    const fromYear = fromDate.getFullYear();
-    const toYear = toDate.getFullYear();
-    for (let year = fromYear; year <= toYear; year++) {
-      years.push(setYear(startOfYear(new Date()), year));
-    }
+
+  // Dropdown should appear only when both from/toDate is set
+  if (!fromDate) return <></>;
+  if (!toDate) return <></>;
+
+  const fromYear = fromDate.getFullYear();
+  const toYear = toDate.getFullYear();
+  for (let year = fromYear; year <= toYear; year++) {
+    years.push(setYear(startOfYear(new Date()), year));
   }
 
   const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const newMonth = setYear(new Date(displayMonth), Number(e.target.value));
+    const newMonth = setYear(
+      startOfMonth(displayMonth),
+      Number(e.target.value)
+    );
     props.onChange(newMonth);
   };
 
+  const DropdownComponent = components?.Dropdown ?? Dropdown;
+
   return (
-    <Dropdown
+    <DropdownComponent
+      name="years"
       aria-label={labelYearDropdown()}
-      className={classNames.dropdown_month}
-      style={styles.dropdown_month}
+      className={classNames.dropdown_year}
+      style={styles.dropdown_year}
       onChange={handleChange}
       value={displayMonth.getFullYear()}
       caption={formatYearCaption(displayMonth, { locale })}
@@ -61,6 +72,6 @@ export function YearsDropdown(props: YearsDropdownProps): JSX.Element {
           {formatYearCaption(year, { locale })}
         </option>
       ))}
-    </Dropdown>
+    </DropdownComponent>
   );
 }

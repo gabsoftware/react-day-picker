@@ -1,10 +1,10 @@
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 
-import { WeekdayLabelFormatter } from 'types';
+import { WeekdayLabel } from 'types/Labels';
 
 /**
  * The default ARIA label for the Weekday element.
  */
-export const labelWeekday: WeekdayLabelFormatter = (day, options): string => {
-  return format(day, 'cccc.', options);
+export const labelWeekday: WeekdayLabel = (day, options): string => {
+  return format(day, 'cccc', options);
 };

@@ -1,73 +1,85 @@
-describe('when matches the `hidden` modifier', () => {
-  test.todo('should not render anything');
-});
+import React from 'react';
 
-describe('when outside the display month', () => {
-  describe('if the outside days are hidden', () => {
-    test.todo('should not render anything');
+import { screen } from '@testing-library/react';
+import { DayPickerProps } from 'DayPicker';
+
+import { customRender } from 'test/render';
+import { freezeBeforeAll } from 'test/utils';
+
+import { CustomComponents } from 'types/DayPickerBase';
+
+import { Day, DayProps } from './Day';
+
+const today = new Date(2021, 8);
+
+freezeBeforeAll(today);
+let container: HTMLElement;
+function setup(props: DayProps, dayPickerProps?: DayPickerProps) {
+  const view = customRender(<Day {...props} />, dayPickerProps);
+  container = view.container;
+}
+
+const date = today;
+const displayMonth = today;
+const props: DayProps = {
+  date: date,
+  displayMonth
+};
+
+describe('when the day to render has an hidden modifier', () => {
+  const dayPickerProps: DayPickerProps = {
+    modifiers: { hidden: date }
+  };
+  beforeEach(() => {
+    setup(props, dayPickerProps);
   });
-  describe('if the outside days are visible', () => {
-    test.todo('should apply the `day_outside` class name`');
-    test.todo('should apply the `day_outside` style');
-    test.todo('should render the day content in a `div` element');
+  test('should render an empty element', () => {
+    expect(container).toBeEmptyDOMElement();
+  });
+});
+describe('when a no selection mode and no "onDayClick"', () => {
+  const dayPickerProps: DayPickerProps = { mode: 'default' };
+  beforeEach(() => {
+    setup(props, dayPickerProps);
+  });
+  test('should render a div', () => {
+    expect(container.firstChild?.nodeName).toBe('DIV');
   });
 });
 
-describe('when the day is not selectable', () => {
-  test.todo('should render the day content in a `div` element');
-});
-
-describe('when the day is disabled', () => {
-  test.todo('should render a disabled button');
-  test.todo('should render a not focusable button');
-});
-
-describe('when the day is focused', () => {
-  test.todo('should render a not focusable button');
-});
-
-describe('when selection mode is not controlled', () => {
-  test.todo('should render a `div` element');
-});
-
-describe('when the day is not selectable', () => {
-  test.todo('should render a `div` element');
-});
-
-describe('when the day is selectable', () => {
-  test.todo('should render a `button` element');
-  test.todo('should apply the `day` class name');
-
-  test.todo('should apply the `day` style');
-  test.todo('should be focusable');
-  test.todo('should attach the `onDayClick` event handler');
-  test.todo('should attach the `onDayFocus` event handler');
-  test.todo('should attach the `onDayBlur` event handler');
-  test.todo('should attach the `onDayKeyDown` event handler');
-  test.todo('should attach the `onDayKeyUp` event handler');
-  test.todo('should attach the `onDayMouseEnter` event handler');
-  test.todo('should attach the `onDayMouseLeave` event handler');
-  test.todo('should attach the `onDayTouchCancel` event handler');
-  test.todo('should attach the `onDayTouchEnd` event handler');
-  test.todo('should attach the `onDayTouchMove` event handler');
-  test.todo('should attach the `onDayTouchStart` event handler');
-
-  describe('and matches a modifier', () => {
-    test.todo('should apply the modifier class names');
-    test.todo('should apply the modifier style');
+describe('when a selection mode is set', () => {
+  const dayPickerProps: DayPickerProps = {
+    mode: 'single'
+  };
+  beforeEach(() => {
+    setup(props, dayPickerProps);
   });
-
-  describe('and is clicked', () => {
-    test.todo('should have the `aria-pressed` attribute');
-    test.todo('should have the `selected` class name');
-    test.todo('should have the `selected` style');
+  test('should render a button named "day"', () => {
+    expect(container.firstChild?.nodeName).toBe('BUTTON');
+    expect(container.firstChild).toHaveAttribute('name', 'day');
   });
+});
 
-  describe('and is focused', () => {
-    test.todo('should be the focused day');
-    test.todo('should not be focusable again');
-    describe('and then blurred', () => {
-      test.todo('should not be the focused day anymore');
-    });
+describe('when "onDayClick" is present', () => {
+  const dayPickerProps: DayPickerProps = {
+    onDayClick: jest.fn()
+  };
+  beforeEach(() => {
+    setup(props, dayPickerProps);
+  });
+  test('should render a button', () => {
+    expect(container.firstChild?.nodeName).toBe('BUTTON');
+  });
+});
+
+describe('when using a custom DayContent component', () => {
+  const components: CustomComponents = {
+    DayContent: () => <>Custom DayContent</>
+  };
+  beforeEach(() => {
+    setup(props, { components });
+  });
+  test('it should render the custom component instead', () => {
+    expect(screen.getByText('Custom DayContent')).toBeInTheDocument();
   });
 });

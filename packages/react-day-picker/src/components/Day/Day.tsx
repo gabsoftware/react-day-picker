@@ -1,25 +1,30 @@
-import * as React from 'react';
+import React, { useRef } from 'react';
 
-import { Button } from 'components/Button';
+import { useDayRender } from 'hooks/useDayRender';
 
-import { DayProps } from './DayProps';
-import { useDay } from './hooks/useDay';
+import { Button } from '../Button';
+
+/** Represent the props used by the {@link Day} component. */
+export interface DayProps {
+  /** The month where the date is displayed. */
+  displayMonth: Date;
+  /** The date to render. */
+  date: Date;
+}
 
 /**
  * The content of a day cell – as a button or span element according to its
  * modifiers.
  */
 export function Day(props: DayProps): JSX.Element {
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dayRender = useDayRender(props.date, props.displayMonth, buttonRef);
 
-  const day = useDay(props.date, props.displayMonth, buttonRef);
-  const { buttonProps, nonInteractiveProps } = day;
-
-  if (!buttonProps && !nonInteractiveProps) {
+  if (dayRender.isHidden) {
     return <></>;
   }
-  if (nonInteractiveProps) {
-    return <div {...nonInteractiveProps} />;
+  if (!dayRender.isButton) {
+    return <div {...dayRender.divProps} />;
   }
-  return <Button ref={buttonRef} {...buttonProps} />;
+  return <Button name="day" ref={buttonRef} {...dayRender.buttonProps} />;
 }

@@ -1,9 +1,14 @@
 {
   "extends": "@tsconfig/docusaurus/tsconfig.json",
-  "include": ["src/"],
   "compilerOptions": {
-    "strict": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "lib": ["es2019", "DOM"],
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "skipLibCheck": true,
+    "paths": {
+      "@examples/*": ["./examples/*"],
+      "@site/*": ["./*"]
+    }
   }
 }

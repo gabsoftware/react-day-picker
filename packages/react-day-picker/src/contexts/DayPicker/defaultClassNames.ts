@@ -1,11 +1,11 @@
-import { ClassNames } from 'types';
+import { ClassNames } from 'types/Styles';
 
 /**
  * The name of the default CSS classes.
  */
 export const defaultClassNames: Required<ClassNames> = {
   root: 'rdp',
-  multiple_month: 'rdp-multiple_months',
+  multiple_months: 'rdp-multiple_months',
   with_weeknumber: 'rdp-with_weeknumber',
   vhidden: 'rdp-vhidden',
   button_reset: 'rdp-button_reset',
@@ -13,9 +13,9 @@ export const defaultClassNames: Required<ClassNames> = {
 
   caption: 'rdp-caption',
 
-  caption_first: 'rdp-caption_first',
-  caption_last: 'rdp-caption_last',
-  caption_middle: 'rdp-caption_middle',
+  caption_start: 'rdp-caption_start',
+  caption_end: 'rdp-caption_end',
+  caption_between: 'rdp-caption_between',
   caption_label: 'rdp-caption_label',
 
   caption_dropdowns: 'rdp-caption_dropdowns',
@@ -43,11 +43,16 @@ export const defaultClassNames: Required<ClassNames> = {
   nav_icon: 'rdp-nav_icon',
 
   row: 'rdp-row',
-  row_head: 'rdp-row_head',
   weeknumber: 'rdp-weeknumber',
   cell: 'rdp-cell',
 
   day: 'rdp-day',
+  day_today: 'rdp-day_today',
   day_outside: 'rdp-day_outside',
-  day_today: 'rdp-day_today'
+  day_selected: 'rdp-day_selected',
+  day_disabled: 'rdp-day_disabled',
+  day_hidden: 'rdp-day_hidden',
+  day_range_start: 'rdp-day_range_start',
+  day_range_end: 'rdp-day_range_end',
+  day_range_middle: 'rdp-day_range_middle'
 };
